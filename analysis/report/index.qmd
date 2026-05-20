@@ -378,6 +378,55 @@ only on changes under `analysis/`, `R/`, `DESCRIPTION`, or
 validation) and `render-report.yml` (path-filtered render) is the
 standard zzcollab pattern.
 
+**Symptom 7 (Docker-anchored compendia only): `renv.lock` after
+`renv::snapshot()` records macOS binary fingerprints instead of
+Linux binaries, and CI or a new collaborator's `renv::restore()`
+installs different package builds than the developer tested.**
+The lockfile was snapshotted on the developer's macOS host.
+`renv::snapshot()` captures the installed library of the running
+session; if that session is macOS R, the lockfile records macOS
+binary hashes that a Linux runner cannot reproduce. The lockfile
+then describes an environment that only the original developer on
+that specific machine can fully reproduce, which violates the core
+zzcollab reproducibility guarantee.
+
+For Docker-anchored compendia the answer is unambiguous: snapshot
+inside the Docker container. The reasoning rests on a five-pillar
+coherence check:
+
+- **Dockerfile** -- defines the computational environment (R version,
+  OS, system libraries).
+- **`renv.lock`** -- must record packages that install cleanly
+  inside that environment, meaning Linux binaries against the
+  container's system libraries.
+- **`.Rprofile`** -- bootstraps renv on every session start.
+- **`R/` and `analysis/`** -- the source code.
+- **Raw data** -- the fixed input.
+
+All five must cohere around the single environment the Dockerfile
+defines. The Dockerfile is the anchor; the lockfile follows it. A
+lockfile snapshotted outside the container has slipped its anchor.
+
+**Fix:** enter the container with `make r`, ensure all required
+packages are installed (`renv::restore()` if the library is not
+yet populated), then run `renv::snapshot()`. The lockfile will
+then record Linux binary fingerprints that match both the
+container environment and the Ubuntu CI runner.
+
+**Consequence for CI design:** for a Docker-anchored compendium,
+running CI inside the container (as the old-generation
+`rocker/tidyverse`-based workflow does) is the more principled
+choice, not a legacy pattern to be discarded. The new-generation
+`setup-renv@v2` pattern trades the container's reproducibility
+guarantee for CI simplicity -- a trade worth making for tool
+packages and pure-renv projects, but one to evaluate carefully for
+a compendium whose five pillars are anchored to a Dockerfile. The
+recommended next step when migrating a Docker-anchored compendium
+is therefore not to discard the container-based CI but to tighten
+it: add the explicit `renv::status()` synchronisation guard
+(Symptom 1) inside the container job rather than switching to a
+containerless workflow.
+
 # Uninstall / Rollback
 
 The migration is fully reversible. The previous workflow lives in
