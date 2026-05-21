@@ -513,6 +513,44 @@ The `rocker/verse` case incurs a small overhead (downloading TinyTeX on the host
 runner, ~30 seconds) that is acceptable in exchange for a single maintainable
 template.
 
+**Symptom 10 (ggplot2/patchwork version skew): `object 'is_ggplot' is not
+exported by 'namespace:ggplot2'` during patchwork installation, even when
+patchwork appears to be a current CRAN release.** This is a compound failure
+that surfaces when the Docker base image ships ggplot2 3.5.x and the renv
+lockfile (or the PPM snapshot) pulls patchwork 1.3.2 or later.
+
+`patchwork 1.3.2` added `@importFrom ggplot2 is_ggplot` to its NAMESPACE --
+it imports `is_ggplot` as an exported symbol from ggplot2. `ggplot2 3.5.1`
+(which ships with `rocker/verse:4.4.2`) does not export `is_ggplot`; the
+function was introduced as an export in ggplot2 4.0.0. Installing patchwork
+1.3.2 into a container that has ggplot2 3.5.1 therefore fails at the 'prepare
+package for lazy loading' step with the export error.
+
+The failure looks like it belongs to zzlongplot or the project's own code
+because the error appears during zzlongplot's installation (which imports
+patchwork). But the root cause is one level deeper: patchwork itself cannot
+load against ggplot2 3.5.1.
+
+**Fix:** update ggplot2 to 4.0.x before (or alongside) installing patchwork.
+In the lockfile-rebuild script:
+
+```r
+pkgs <- c("ggplot2", "patchwork", ...)  # include ggplot2 explicitly
+install.packages(pkgs,
+  repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest")
+```
+
+ggplot2 4.0.x pulls in `S7` as a new dependency -- add `S7` to the lockfile
+as part of the same rebuild. After this update, patchwork 1.3.2 loads cleanly
+and any package that depends on patchwork (such as zzlongplot) can be
+installed.
+
+**Portfolio implication:** any zzcollab compendium that uses patchwork and is
+based on `rocker/verse:4.4.2` (which ships ggplot2 3.5.1) will hit this
+failure when the lockfile is rebuilt against the current PPM snapshot. The
+fix -- updating ggplot2 to 4.x -- must be applied consistently across all
+affected repos during lockfile refresh.
+
 # Uninstall / Rollback
 
 The migration is fully reversible. The previous workflow lives in
