@@ -427,6 +427,48 @@ it: add the explicit `renv::status()` synchronisation guard
 (Symptom 1) inside the container job rather than switching to a
 containerless workflow.
 
+**Symptom 8 (Docker-anchored compendia with mounted TinyTeX): `sh: 1: xelatex: Permission denied`
+even after `chmod -R a+rx $HOME/.TinyTeX` on the host runner.** This one has two
+compounding causes that must be understood separately.
+
+*Cause A: `chmod -R` on Linux does not follow file symlinks.* In a TinyTeX
+installation, `~/.TinyTeX/bin/x86_64-linux/xelatex` is a symlink pointing into
+`~/.TinyTeX/texmf-dist/bin/x86_64-linux/`. Running `chmod -R a+rx
+$HOME/.TinyTeX/bin` changes the mode of the symlinks themselves, not the targets.
+The actual ELF binaries in `texmf-dist/` may remain non-executable. Expanding the
+scope to `chmod -R a+rx $HOME/.TinyTeX` does recurse into `texmf-dist/` (because
+`chmod -R` does follow directory symlinks), so it addresses Cause A -- but Cause B
+still blocks execution.
+
+*Cause B: `/root` itself is `700`.* The strategy of mounting TinyTeX into the
+container as `-v $HOME/.TinyTeX:/root/.TinyTeX` places the tree under `/root`
+inside the container. A zzcollab Dockerfile ends with `USER analyst` (or
+equivalent non-root username), so the container process runs without root
+privileges. The Linux kernel checks directory execute-permission at each component
+of a path; `/root` being `700` means that even if every file inside
+`/root/.TinyTeX/` has world-execute permission, the non-root user cannot traverse
+into it. The error `sh: 1: xelatex: Permission denied` reflects the kernel
+blocking path traversal, not a missing execute bit on the binary.
+
+**Fix:** mount TinyTeX to a world-accessible path rather than under `/root`.
+Replace the `-v` and `-e PATH` arguments in the `docker run` call:
+
+```yaml
+# Before (fails for non-root container user)
+-v $HOME/.TinyTeX:/root/.TinyTeX \
+-e PATH="/root/.TinyTeX/bin/x86_64-linux:$PATH" \
+
+# After (world-accessible mount point)
+-v $HOME/.TinyTeX:/opt/tinytex \
+-e PATH="/opt/tinytex/bin/x86_64-linux:$PATH" \
+```
+
+`/opt` is owned by root with permissions `755`, so all users can traverse it.
+The `chmod -R a+rx $HOME/.TinyTeX` step on the host runner is still needed to
+ensure the files themselves are world-readable and executable. The two lines
+together -- chmod on the host, mount to `/opt/tinytex` in the container -- resolve
+both causes.
+
 # Uninstall / Rollback
 
 The migration is fully reversible. The previous workflow lives in
@@ -670,7 +712,7 @@ it will be updated with new findings as they accumulate.
 
 ---
 
-*Rendered on 2026-05-07 at 15:05 PDT.*<br>
+*Rendered on 2026-05-20 at 17:22 PDT.*<br>
 *Source: ~/Dropbox/prj/qblog/posts/63-zzcollab-ci-strategy/zzcollab-ci-strategy/analysis/report/index.qmd*
 
 <!-- ============================================================================
