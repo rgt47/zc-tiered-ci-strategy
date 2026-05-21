@@ -469,6 +469,50 @@ ensure the files themselves are world-readable and executable. The two lines
 together -- chmod on the host, mount to `/opt/tinytex` in the container -- resolve
 both causes.
 
+**Symptom 9 (cross-repo portability): A `render-report.yml` that works for one
+compendium fails for another because one uses `rocker/verse` (TinyTeX built-in,
+runs as root) and the other uses `rocker/tidyverse` (no LaTeX, non-root user).**
+Projects in the same portfolio may have different Dockerfile base images. Applying
+a workflow that was fixed for one base to another without adjustment reproduces the
+original failure.
+
+The `/opt/tinytex` host-mount pattern from Symptom 8 generalises to both cases and
+can serve as the single standard template across all compendium repos:
+
+- *`rocker/verse`-based repos (root user):* The image already ships TinyTeX at
+  `/root/.TinyTeX` with its bin directory on PATH. The host mount at `/opt/tinytex`
+  is redundant but harmless: `xelatex` is found in the container's own PATH entry
+  before the explicit `-e PATH` prefix is reached. Both LaTeX sources exist
+  simultaneously; the container's built-in takes precedence.
+- *`rocker/tidyverse`-based repos (non-root user):* The image has no LaTeX. The
+  host mount at `/opt/tinytex` is the only source of `xelatex`. Because `/opt` is
+  world-traversable (`755`), the non-root user can access the binaries.
+
+The three-step block that achieves this generalisation:
+
+```yaml
+- name: Install TinyTeX on host runner
+  uses: r-lib/actions/setup-tinytex@v2
+
+- name: Make TinyTeX binaries accessible to container
+  run: chmod -R a+rx $HOME/.TinyTeX
+
+- name: Restore packages and render all manuscripts
+  run: |
+    docker run --rm -e CI=true \
+      -v ${{ github.workspace }}:/project \
+      -v $HOME/.TinyTeX:/opt/tinytex \
+      -e PATH="/opt/tinytex/bin/x86_64-linux:$PATH" \
+      -w /project compendium-env \
+      Rscript -e '...'
+```
+
+**Fix:** adopt this three-step block as the standard `render-report.yml` template
+across all Docker-anchored compendium repos, regardless of Dockerfile base image.
+The `rocker/verse` case incurs a small overhead (downloading TinyTeX on the host
+runner, ~30 seconds) that is acceptable in exchange for a single maintainable
+template.
+
 # Uninstall / Rollback
 
 The migration is fully reversible. The previous workflow lives in
