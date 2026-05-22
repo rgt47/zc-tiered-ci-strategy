@@ -91,6 +91,34 @@ HERO IMAGE
 
 *Three independent verification tiers, each with its own failure mode and its own definition of 'passing'.*
 
+:::{.callout-warning title="Correction -- May 2026"}
+Two recommendations in this post were superseded by findings from
+multi-repo deployment in May 2026. Both are annotated inline below
+at the relevant sections.
+
+**`r-lib/actions/setup-renv@v2` fails on zzcollab research
+compendia.** All zzcollab compendia include an `.Rprofile` gate that
+suppresses renv activation outside a Docker container
+(`ZZCOLLAB_CONTAINER=true` must be set). When `setup-renv@v2` calls
+`renv::restore()` on a host runner, the gate fires, renv declines to
+activate, and no packages are installed. The CI job either silently
+passes (nothing installed, nothing verified) or fails with misleading
+errors. The corrected approach for `r-package.yml` is
+`r-lib/actions/setup-r-dependencies@v2`, which reads `DESCRIPTION`
+directly and never invokes renv.
+
+**`renv::status()$synchronized` is an unstable internal field.** After
+a renv version downgrade during `renv::restore()` (for example, from
+1.2.3 to 1.2.2), the field returns `FALSE` regardless of actual
+synchronisation state, producing spurious CI failures. The `quit(status
+= 1)` guard built on this field should be removed. Relying on
+`renv::restore()`'s exit code is sufficient.
+
+The current working architecture (`r-package.yml` v2.7.0) is
+documented in
+[Post 69: zzcollab GitHub Actions workflows](../../69-zzc-github-workflows/zzc-github-workflows/index.html).
+:::
+
 # Introduction
 
 I did not realise how much my CI was lying to me until I added a
@@ -271,6 +299,17 @@ jobs:
           cat("renv: lockfile, library, and source are synchronized.\n")
 ```
 
+:::{.callout-warning title="Correction (May 2026)"}
+`r-lib/actions/setup-renv@v2` does not work on zzcollab research
+compendia. The zzcollab `.Rprofile` gate suppresses renv outside a
+Docker container (`ZZCOLLAB_CONTAINER=true`), so `setup-renv@v2`
+cannot install the lockfile on a host runner. The corrected
+`r-package.yml` template uses `r-lib/actions/setup-r-dependencies@v2`
+(reads `DESCRIPTION`, no renv involvement) together with
+`r-lib/actions/check-r-package@v2`. See [Post 69](../../69-zzc-github-workflows/zzc-github-workflows/index.html)
+for the complete v2.7.0 template.
+:::
+
 Three points warrant emphasis. First, `r-version: 'renv'` reads the
 R version from the lockfile rather than defaulting to whatever
 `release` happens to be. Second, the explicit `quit(status = 1)`
@@ -332,6 +371,17 @@ does not raise an error. Without an explicit `quit(status = 1)` on
 `!isTRUE(status$synchronized)`, the workflow exits 0 and GitHub
 marks the run successful regardless of how much drift the log
 records. **Fix:** the explicit guard shown in Step 2 above.
+
+:::{.callout-warning title="Correction (May 2026)"}
+The `renv::status()$synchronized` field is not a stable API. After
+a renv version downgrade during `renv::restore()` (observed when the
+lockfile pins renv 1.2.2 but the host runner installs 1.2.3 first,
+then downgrades), the field returns `FALSE` regardless of actual
+synchronisation state. The `quit(status = 1)` guard therefore
+produces spurious CI failures on an otherwise clean project. Relying
+on `renv::restore()`'s own exit code, and omitting the
+`renv::status()` check entirely, is the more robust pattern.
+:::
 
 **Symptom 2: 'package(s) are in an inconsistent state, installed:
 y, recorded: n, used: y'.** The lockfile is incomplete. Source code
@@ -733,6 +783,21 @@ to real project-side regressions (lockfile drift, aged-out Posit
 binaries, R-version mismatch, missing package documentation); none
 are CI-infrastructure noise.
 
+:::{.callout-warning title="Correction to Point 3 (May 2026)"}
+Point 3 above reflects the intent of this post at time of writing,
+but both mechanisms named have since proved unreliable for zzcollab
+compendia. `setup-renv@v2` cannot install packages on a host runner
+because the zzcollab `.Rprofile` gate suppresses renv outside the
+Docker container. `renv::status()$synchronized` misfires after renv
+version downgrades, producing spurious failures. The corrected
+`r-package.yml` (v2.7.0) uses `setup-r-dependencies@v2` to install
+from `DESCRIPTION` and `check-r-package@v2` for validation; no renv
+involvement on the host runner at all. Full template and rationale in
+[Post 69](../../69-zzc-github-workflows/zzc-github-workflows/index.html).
+The four-workspace typology (Point 2) and the exit-status principle
+(Point 1) remain sound.
+:::
+
 # See Also
 
 - The companion [white paper](../docs/ci-strategy-tiered-model.pdf)
@@ -794,7 +859,7 @@ it will be updated with new findings as they accumulate.
 
 ---
 
-*Rendered on 2026-05-20 at 17:22 PDT.*<br>
+*Rendered on 2026-05-22 at 09:22 PDT.*<br>
 *Source: ~/Dropbox/prj/qblog/posts/63-zzcollab-ci-strategy/zzcollab-ci-strategy/analysis/report/index.qmd*
 
 <!-- ============================================================================
