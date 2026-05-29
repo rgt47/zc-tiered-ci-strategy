@@ -932,5 +932,4 @@ Recommended reading order:
 6. Post 06: [Seven Required Elements for a zzc Manuscript report.Rmd](../06-zc-manuscript-report-elements/)
 7. **Post 07: A tiered CI strategy for zzcollab research compendia** (this post)
 8. Post 08: [GitHub Actions workflows for zzcollab research compendia](../08-zc-github-actions-workflows/)
-9. Post 09: [Setting up rrtools (predecessor to zzcollab, archived)](../09-zc-rrtools-predecessor-archived/)
 
