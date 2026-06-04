@@ -6,7 +6,7 @@ categories: [ci, github-actions, reproducibility, zzcollab, renv]
 description: "I did not realise how much my CI was lying to me until I added a single explicit failure check and watched five 'passing' projects turn honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
 image: "media/images/hero.png"
 document-type: "blog"
-draft: false
+draft: true
 execute:
   echo: true
   warning: false
@@ -39,7 +39,7 @@ YAML FRONT MATTER (lines 1-20)
   [x] categories      — include `setup`, the tool name, and host OS
   [x] description     — 1-2 sentences for blog listing card
   [x] image           — path to hero image (relative to this .qmd)
-  [x] draft: false    — flip when ready
+  [x] draft: true    — flip when ready
 
 NARRATIVE INPUTS
   [x] Hook sentence   — 'I didn't know how to configure [tool] until [trigger]'
@@ -199,7 +199,7 @@ By the end of this migration, the zzcollab project will have:
    `RENV_CONFIG_REPOS_OVERRIDE` env var that `setup-renv@v2` sets
    automatically.
 
-![A coffee setting in a quiet workspace, the morning's first mug poured before the day's verification work begins. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance1.jpg){.img-fluid}
+![A coffee setting in a quiet workspace, the morning's first mug poured before the day's verification work begins. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance1.png){.img-fluid}
 
 # What is the tiered CI model?
 
@@ -354,7 +354,7 @@ same project family. The mechanical work shrinks dramatically:
 copy the YAML, push, observe, fix project-side issues that
 surface.
 
-![A coffee scene mid-pour, the kind of small precision the migration above is asking of CI. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance2.jpg){.img-fluid}
+![A coffee scene mid-pour, the kind of small precision the migration above is asking of CI. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance2.png){.img-fluid}
 
 # Things to Watch Out For
 
@@ -623,7 +623,7 @@ are being repaired in parallel), the strict guard can be loosened
 to informational reporting by removing the `quit(status = 1)`
 line. The rest of the new generation pattern remains in place.
 
-![An empty cup beside a closed notebook, the morning's verification work done and the cup ready for the next pour. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance3.jpg){.img-fluid}
+![An empty cup beside a closed notebook, the morning's verification work done and the cup ready for the next pour. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance3.png){.img-fluid}
 
 # What did we learn?
 
@@ -865,7 +865,7 @@ it will be updated with new findings as they accumulate.
 *Source: ~/Dropbox/prj/qblog/posts/63-zzcollab-ci-strategy/zzcollab-ci-strategy/analysis/report/index.qmd*
 
 <!-- ============================================================================
-PRE-PUBLISH QA CHECKLIST: verify each item BEFORE setting draft: false
+PRE-PUBLISH QA CHECKLIST: verify each item BEFORE setting draft: true
 
 This is the verification pass that mirrors the AUTHOR PROVIDES list at the
 top of this file. If anything below is unchecked, the post is not ready.
@@ -873,7 +873,7 @@ top of this file. If anything below is unchecked, the post is not ready.
 [x] YAML
     [x] title, subtitle, date, categories, description, image filled in
     [x] document-type: 'blog'
-    [x] draft: false
+    [x] draft: true
 
 [x] Narrative complete (no remaining `[bracketed]` placeholders)
     [x] grep '\[' index.qmd returns only legitimate code/links
