@@ -2,11 +2,11 @@
 title: "A tiered CI strategy for zzcollab research compendia"
 author: "Ronald 'Ryy' G. Thomas"
 date: "2026-05-06"
-categories: [ci, github-actions, reproducibility, zzcollab, renv]
+categories: [ci, github-actions, reproducibility, zzcollab-compendia, renv]
 description: "I did not realise how much my CI was lying to me until I added a single explicit failure check and watched five 'passing' projects turn honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
 image: "media/images/hero.png"
 document-type: "blog"
-draft: true
+draft: false
 execute:
   echo: true
   warning: false
@@ -39,7 +39,7 @@ YAML FRONT MATTER (lines 1-20)
   [x] categories      — include `setup`, the tool name, and host OS
   [x] description     — 1-2 sentences for blog listing card
   [x] image           — path to hero image (relative to this .qmd)
-  [x] draft: true    — flip when ready
+  [x] draft: false    — flip when ready
 
 NARRATIVE INPUTS
   [x] Hook sentence   — 'I didn't know how to configure [tool] until [trigger]'
@@ -865,7 +865,7 @@ it will be updated with new findings as they accumulate.
 *Source: ~/Dropbox/prj/qblog/posts/63-zzcollab-ci-strategy/zzcollab-ci-strategy/analysis/report/index.qmd*
 
 <!-- ============================================================================
-PRE-PUBLISH QA CHECKLIST: verify each item BEFORE setting draft: true
+PRE-PUBLISH QA CHECKLIST: verify each item BEFORE setting draft: false
 
 This is the verification pass that mirrors the AUTHOR PROVIDES list at the
 top of this file. If anything below is unchecked, the post is not ready.
@@ -873,7 +873,7 @@ top of this file. If anything below is unchecked, the post is not ready.
 [x] YAML
     [x] title, subtitle, date, categories, description, image filled in
     [x] document-type: 'blog'
-    [x] draft: true
+    [x] draft: false
 
 [x] Narrative complete (no remaining `[bracketed]` placeholders)
     [x] grep '\[' index.qmd returns only legitimate code/links
