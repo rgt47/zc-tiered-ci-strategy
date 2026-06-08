@@ -1,6 +1,6 @@
 ---
 title: "A tiered CI strategy for zzcollab research compendia"
-author: "Ronald 'Ryy' G. Thomas"
+author: "Ronald G. Thomas"
 date: "2026-05-06"
 categories: [ci, github-actions, reproducibility, zzcollab-compendia, renv]
 description: "I did not realise how much my CI was lying to me until I added a single explicit failure check and watched five 'passing' projects turn honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
