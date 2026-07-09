@@ -14,9 +14,9 @@
 #======================================================================
 
 # ARGs before FROM are available only for FROM instruction
-ARG R_VERSION=4.5.2
+ARG R_VERSION=4.6.0
 
-FROM rocker/tidyverse:4.5.2
+FROM rocker/tidyverse:4.6.0
 
 # Re-declare ARGs after FROM for use in build stages
 ARG USERNAME=analyst
@@ -74,7 +74,7 @@ RUN echo "options(repos = c(CRAN = 'https://packagemanager.posit.co/cran/__linux
         >> /usr/local/lib/R/etc/Rprofile.site
 
 # Install renv from CRAN
-RUN --mount=type=cache,target=/tmp/R-cache/4.5.2 \
+RUN --mount=type=cache,target=/tmp/R-cache/4.6.0 \
     R -e "install.packages('renv')"
 
 # Copy project files and restore packages (before USER for root access)
