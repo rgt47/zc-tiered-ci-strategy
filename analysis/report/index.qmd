@@ -12,9 +12,6 @@ execute:
   warning: false
   message: false
 format:
-  html:
-    code-fold: false
-    code-tools: false
   pdf:
     pdf-engine: xelatex
     monofont: 'DejaVu Sans Mono'
