@@ -11,13 +11,6 @@ execute:
   echo: true
   warning: false
   message: false
-format:
-  pdf:
-    pdf-engine: xelatex
-    monofont: 'DejaVu Sans Mono'
-    geometry: margin=1in
-    fontsize: 11pt
-    toc: false
 cluster: zzcollab-compendia
 cluster-order: 7
 ---
@@ -196,7 +189,7 @@ By the end of this migration, the zzcollab project will have:
    `RENV_CONFIG_REPOS_OVERRIDE` env var that `setup-renv@v2` sets
    automatically.
 
-![A coffee setting in a quiet workspace, the morning's first mug poured before the day's verification work begins. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance1.png){.img-fluid}
+![A coffee setting in a quiet workspace, the morning's first mug poured before the day's verification work begins. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance1.png){.img-fluid height=3.5in}
 
 # What is the tiered CI model?
 
@@ -351,7 +344,7 @@ same project family. The mechanical work shrinks dramatically:
 copy the YAML, push, observe, fix project-side issues that
 surface.
 
-![A coffee scene mid-pour, the kind of small precision the migration above is asking of CI. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance2.png){.img-fluid}
+![A coffee scene mid-pour, the kind of small precision the migration above is asking of CI. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance2.png){.img-fluid height=3.5in}
 
 # Things to Watch Out For
 
@@ -620,7 +613,7 @@ are being repaired in parallel), the strict guard can be loosened
 to informational reporting by removing the `quit(status = 1)`
 line. The rest of the new generation pattern remains in place.
 
-![An empty cup beside a closed notebook, the morning's verification work done and the cup ready for the next pour. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance3.png){.img-fluid}
+![An empty cup beside a closed notebook, the morning's verification work done and the cup ready for the next pour. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance3.png){.img-fluid height=3.5in}
 
 # What did we learn?
 
