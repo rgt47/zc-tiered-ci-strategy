@@ -108,7 +108,7 @@ synchronisation state, producing spurious CI failures. The `quit(status
 
 The current working architecture (`r-package.yml` v2.7.0) is
 documented in
-[Post 69: zzcollab GitHub Actions workflows](../../69-zzc-github-workflows/zzc-github-workflows/index.html).
+[Post 69: zzcollab GitHub Actions workflows](../zc-github-actions-workflows/).
 :::
 
 # Introduction
@@ -298,7 +298,7 @@ Docker container (`ZZCOLLAB_CONTAINER=true`), so `setup-renv@v2`
 cannot install the lockfile on a host runner. The corrected
 `r-package.yml` template uses `r-lib/actions/setup-r-dependencies@v2`
 (reads `DESCRIPTION`, no renv involvement) together with
-`r-lib/actions/check-r-package@v2`. See [Post 69](../../69-zzc-github-workflows/zzc-github-workflows/index.html)
+`r-lib/actions/check-r-package@v2`. See [Post 69](../zc-github-actions-workflows/)
 for the complete v2.7.0 template.
 :::
 
@@ -785,7 +785,7 @@ version downgrades, producing spurious failures. The corrected
 `r-package.yml` (v2.7.0) uses `setup-r-dependencies@v2` to install
 from `DESCRIPTION` and `check-r-package@v2` for validation; no renv
 involvement on the host runner at all. Full template and rationale in
-[Post 69](../../69-zzc-github-workflows/zzc-github-workflows/index.html).
+[Post 69](../zc-github-actions-workflows/).
 The four-workspace typology (Point 2) and the exit-status principle
 (Point 1) remain sound.
 :::
@@ -852,7 +852,7 @@ it will be updated with new findings as they accumulate.
 ---
 
 *Rendered on 2026-05-22 at 09:22 PDT.*<br>
-*Source: ~/Dropbox/prj/qblog/posts/63-zzcollab-ci-strategy/zzcollab-ci-strategy/analysis/report/index.qmd*
+*Source: ~/prj/rgtlab/posts/zc-tiered-ci-strategy/index.qmd*
 
 <!-- ============================================================================
 PRE-PUBLISH QA CHECKLIST: verify each item BEFORE setting draft: false
