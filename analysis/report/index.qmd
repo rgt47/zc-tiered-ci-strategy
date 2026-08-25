@@ -189,7 +189,7 @@ By the end of this migration, the zzcollab project will have:
    `RENV_CONFIG_REPOS_OVERRIDE` env var that `setup-renv@v2` sets
    automatically.
 
-![A coffee setting in a quiet workspace, the morning's first mug poured before the day's verification work begins. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance1.png){.img-fluid height=3.5in}
+![Three graduated sieves nested one inside the next, coarse pebbles caught only in the top mesh: successive filtering tiers, each catching what the coarser tier let through.](media/images/ambiance1.jpg){.img-fluid height=3.5in}
 
 # What is the tiered CI model?
 
@@ -344,7 +344,7 @@ same project family. The mechanical work shrinks dramatically:
 copy the YAML, push, observe, fix project-side issues that
 surface.
 
-![A coffee scene mid-pour, the kind of small precision the migration above is asking of CI. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance2.png){.img-fluid height=3.5in}
+![Three identical stopwatches in a row showing increasing elapsed times: fast, medium, and slow CI tiers running at different cadences.](media/images/ambiance2.jpg){.img-fluid height=3.5in}
 
 # Things to Watch Out For
 
@@ -613,7 +613,7 @@ are being repaired in parallel), the strict guard can be loosened
 to informational reporting by removing the `quit(status = 1)`
 line. The rest of the new generation pattern remains in place.
 
-![An empty cup beside a closed notebook, the morning's verification work done and the cup ready for the next pour. Placeholder imagery; topic-specific replacement pending.](media/images/ambiance3.png){.img-fluid height=3.5in}
+![A relay baton mid-handoff between two hands, captured just before the exchange completes: one CI tier handing off to the next only after it succeeds.](media/images/ambiance3.jpg){.img-fluid height=3.5in}
 
 # What did we learn?
 

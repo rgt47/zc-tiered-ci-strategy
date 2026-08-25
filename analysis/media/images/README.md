@@ -21,20 +21,22 @@ The four post-display images are tracked here.
 
 ## ambiance1.jpg, ambiance2.jpg, ambiance3.jpg
 
-- **Source:** Coffee-themed placeholder images shipped with
-  the post-47 setup template, copied here from the same
-  directory's `placeholder-coffee-01.jpg`,
-  `placeholder-coffee-02.jpg`, and `placeholder-coffee-03.jpg`
-  respectively.
-- **License:** Inherited from the post-47 template; see the
-  post-47 attribution log for the original source.
-- **Status:** Placeholder pending topic-specific generation.
-  The Imagen 3 prompts for the intended ambiance imagery
-  (notebooks, magnifying lens, drawer fronts) are logged at
-  `~/Dropbox/prj/qblog/_plans/HERO_IMAGE_PROMPTS.md` under
-  Post 63. Replace these three files when topic-specific
-  imagery is generated; the captions in `index.qmd` will
-  need a corresponding refresh at that time.
+- **Status (2026-08-25):** Replaced. All three are genuine Gemini
+  generations as of 2026-08-25 (generated via the
+  `gemini-image-generator` tool), replacing the coffee-themed
+  post-47 placeholders described below in the original entry.
+- `ambiance1.jpg`: three graduated sieves nested one inside the
+  next, coarse pebbles caught only in the top mesh. Metaphor:
+  successive filtering tiers, each catching what the coarser tier
+  let through.
+- `ambiance2.jpg`: three identical stopwatches in a row showing
+  increasing elapsed times. Metaphor: fast, medium, and slow CI
+  tiers running at different cadences.
+- `ambiance3.jpg`: a relay baton mid-handoff between two hands.
+  Metaphor: one CI tier handing off to the next only after it
+  succeeds.
+- All three processed via `magick -resize 1600x -strip -quality 85`
+  to 1600x873.
 
 ## r-logo.png
 
