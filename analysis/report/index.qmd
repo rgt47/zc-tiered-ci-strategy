@@ -3,7 +3,7 @@ title: "A tiered CI strategy for zzcollab research compendia"
 author: "Ronald G. Thomas"
 date: "2026-05-06"
 categories: [ci, github-actions, reproducibility, zzcollab-compendia, renv]
-description: "I did not realise how much my CI was lying to me until I added a single explicit failure check and watched five 'passing' projects turn honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
+description: "I did not realize how much my CI was lying to me until I added a single explicit failure check and watched five 'passing' projects turn honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
 image: "media/images/hero.png"
 document-type: "blog"
 draft: true
@@ -102,7 +102,7 @@ directly and never invokes renv.
 **`renv::status()$synchronized` is an unstable internal field.** After
 a renv version downgrade during `renv::restore()` (for example, from
 1.2.3 to 1.2.2), the field returns `FALSE` regardless of actual
-synchronisation state, producing spurious CI failures. The `quit(status
+synchronization state, producing spurious CI failures. The `quit(status
 = 1)` guard built on this field should be removed. Relying on
 `renv::restore()`'s exit code is sufficient.
 
@@ -113,7 +113,7 @@ documented in
 
 # Introduction
 
-I did not realise how much my CI was lying to me until I added a
+I did not realize how much my CI was lying to me until I added a
 single explicit failure check and watched five 'passing' projects
 turn honestly red. The framework's default workflow for the zzcollab
 ecosystem (a Docker-plus-renv pattern) had been showing green
@@ -136,7 +136,7 @@ of them, plus two distinct categories of project-side regression
 that had been similarly invisible.
 
 This post walks through the migration: a tiered CI model with one
-template per zzcollab workspace type, an explicit synchronisation
+template per zzcollab workspace type, an explicit synchronization
 gate for lockfiles, and a strategy for getting the framework out of
 the business of reporting fictional health. The companion
 [white paper](../docs/ci-strategy-tiered-model.pdf) (mirrored in
@@ -369,7 +369,7 @@ The `renv::status()$synchronized` field is not a stable API. After
 a renv version downgrade during `renv::restore()` (observed when the
 lockfile pins renv 1.2.2 but the host runner installs 1.2.3 first,
 then downgrades), the field returns `FALSE` regardless of actual
-synchronisation state. The `quit(status = 1)` guard therefore
+synchronization state. The `quit(status = 1)` guard therefore
 produces spurious CI failures on an otherwise clean project. Relying
 on `renv::restore()`'s own exit code, and omitting the
 `renv::status()` check entirely, is the more robust pattern.
@@ -465,7 +465,7 @@ packages and pure-renv projects, but one to evaluate carefully for
 a compendium whose five pillars are anchored to a Dockerfile. The
 recommended next step when migrating a Docker-anchored compendium
 is therefore not to discard the container-based CI but to tighten
-it: add the explicit `renv::status()` synchronisation guard
+it: add the explicit `renv::status()` synchronization guard
 (Symptom 1) inside the container job rather than switching to a
 containerless workflow.
 
@@ -518,7 +518,7 @@ Projects in the same portfolio may have different Dockerfile base images. Applyi
 a workflow that was fixed for one base to another without adjustment reproduces the
 original failure.
 
-The `/opt/tinytex` host-mount pattern from Symptom 8 generalises to both cases and
+The `/opt/tinytex` host-mount pattern from Symptom 8 generalizes to both cases and
 can serve as the single standard template across all compendium repos:
 
 - *`rocker/verse`-based repos (root user):* The image already ships TinyTeX at
@@ -530,7 +530,7 @@ can serve as the single standard template across all compendium repos:
   host mount at `/opt/tinytex` is the only source of `xelatex`. Because `/opt` is
   world-traversable (`755`), the non-root user can access the binaries.
 
-The three-step block that achieves this generalisation:
+The three-step block that achieves this generalization:
 
 ```yaml
 - name: Install TinyTeX on host runner
@@ -607,7 +607,7 @@ git commit -m "Revert to prior CI workflow"
 git push
 ```
 
-If only the strict synchronisation check is the source of friction
+If only the strict synchronization check is the source of friction
 (for example, during a transitional period while several lockfiles
 are being repaired in parallel), the strict guard can be loosened
 to informational reporting by removing the `quit(status = 1)`
@@ -694,12 +694,12 @@ line. The rest of the new generation pattern remains in place.
   a developer to inspect the project and pick. A future
   enhancement to `zzc analysis` or `zzc doctor` could automate
   this.
-- **The `renv::status()` synchronisation check assumes
+- **The `renv::status()` synchronization check assumes
   `renv.lock` is the source of truth.** Projects that
   intentionally maintain a smaller lockfile (for example, a
   package that lists only its declared `Imports` and trusts the
   user's environment for everything else) will fail the
-  synchronisation check by design. The check is appropriate for
+  synchronization check by design. The check is appropriate for
   research compendia; it may not be for some other patterns.
 - **The Docker container is no longer exercised by CI.** Projects
   that rely on the Dockerfile for production deployment should
@@ -712,7 +712,7 @@ line. The rest of the new generation pattern remains in place.
    in `.github/workflows/` automatically. This removes the
    manual decision in Step 1 of the migration.
 2. **Date-pin the lockfile URL at init time.** When `zzc`
-   initialises a project, write `R$Repositories[0].URL` as
+   initializes a project, write `R$Repositories[0].URL` as
    `https://packagemanager.posit.co/cran/__linux__/noble/<today>`
    rather than the unqualified source URL the framework currently
    emits.
@@ -750,12 +750,12 @@ The pattern is not a new design. The two-workflow split
 workflow all already exist in zzcollab's template set, applied
 inconsistently across deployed projects. The migration described
 here is the explicit deployment of those existing patterns
-uniformly, with the addition of a single explicit synchronisation
+uniformly, with the addition of a single explicit synchronization
 guard that the framework's templates had been missing.
 
 The companion white paper records the analytic detail behind the
 choices made here, including the four-workspace typology, the
-verification of the synchronisation check at scale, and the
+verification of the synchronization check at scale, and the
 classification of failure modes observed during the multi-repo
 deployment. Readers who want to understand why the templates have
 the shapes they do should consult that document; readers who want
