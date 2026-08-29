@@ -117,7 +117,7 @@ I did not realize how much my CI was lying to me until I added a
 single explicit failure check and watched five 'passing' projects
 turn honestly red. The framework's default workflow for the zzcollab
 ecosystem (a Docker-plus-renv pattern) had been showing green
-checkmarks across the projects I cared about, and I had been
+checkmarks across the projects I cared about. I had been
 trusting those checkmarks the way one trusts the brake light on a
 car. The revelation was that some of the brake lights were on green
 because the bulb was burnt out, not because anything had been
@@ -487,7 +487,7 @@ container as `-v $HOME/.TinyTeX:/root/.TinyTeX` places the tree under `/root`
 inside the container. A zzcollab Dockerfile ends with `USER analyst` (or
 equivalent non-root username), so the container process runs without root
 privileges. The Linux kernel checks directory execute-permission at each component
-of a path; `/root` being `700` means that even if every file inside
+of a path, and `/root` is `700`. This means that even if every file inside
 `/root/.TinyTeX/` has world-execute permission, the non-root user cannot traverse
 into it. The error `sh: 1: xelatex: Permission denied` reflects the kernel
 blocking path traversal, not a missing execute bit on the binary.
