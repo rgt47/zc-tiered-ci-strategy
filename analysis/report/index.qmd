@@ -3,7 +3,7 @@ title: "A tiered CI strategy for zzcollab research compendia"
 author: "Ronald G. Thomas"
 date: "2026-05-06"
 categories: [ci, github-actions, reproducibility, zzcollab-compendia, renv]
-description: "I did not realize how much my CI was lying to me until I added a single explicit failure check and watched five 'passing' projects turn honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
+description: "My CI was lying to me: a single explicit failure check turned five 'passing' projects honestly red. A workflow-style migration guide for zzcollab projects across four workspace types."
 image: "media/images/hero.png"
 document-type: "blog"
 draft: false
@@ -32,7 +32,7 @@ YAML FRONT MATTER (lines 1-20)
   [x] draft: false    — flip when ready
 
 NARRATIVE INPUTS
-  [x] Hook sentence   — 'I didn't know how to configure [tool] until [trigger]'
+  [x] Hook sentence   — states the substantive finding up front
   [x] Pain point      — the specific friction the tool removes
   [x] Motivations     — exactly 4-5 bullets (workflow gap, frustration, curiosity, learning)
   [x] Objectives      — exactly 4 numbered, verifiable end states
@@ -113,15 +113,14 @@ documented in
 
 # Introduction
 
-I did not realize how much my CI was lying to me until I added a
-single explicit failure check and watched five 'passing' projects
-turn honestly red. The framework's default workflow for the zzcollab
+My CI had been lying to me, and a single explicit failure check
+turned five 'passing' projects honestly red. The
+framework's default workflow for the zzcollab
 ecosystem (a Docker-plus-renv pattern) had been showing green
 checkmarks across the projects I cared about. I had been
 trusting those checkmarks the way one trusts the brake light on a
-car. The revelation was that some of the brake lights were on green
-because the bulb was burnt out, not because anything had been
-verified.
+car. Some of the brake lights were on green because the bulb was
+burnt out, not because anything had been verified.
 
 The discovery happened almost by accident. I was migrating one
 research compendium to a tighter CI pattern (`r-lib/actions/setup-renv@v2`
