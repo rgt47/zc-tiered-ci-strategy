@@ -921,4 +921,5 @@ Recommended reading order:
 6. Post 06: [Seven Required Elements for a zzc Manuscript report.Rmd](../zc-manuscript-report-elements/)
 7. **Post 07: A tiered CI strategy for zzcollab research compendia** (this post)
 8. Post 08: [GitHub Actions workflows for zzcollab research compendia](../zc-github-actions-workflows/)
+9. Post 09: [Offloading R Simulations to a Home Server](../zc-offload-simulations-home-server/)
 
